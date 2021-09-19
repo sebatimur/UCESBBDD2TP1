@@ -46,20 +46,17 @@ if usuario <=>5
 THEN
 
 set
-suma1:
-=
+suma1:=
 (SELECT ifNULL(SUM(hora),0)
 FROM carga_diaria
 WHERE id_proyecto=proyecto AND MONTH(dia)=mes);
 set
-suma2:
-=
+suma2:=
 (SELECT ifNULL(SUM(hora),0)
 FROM carga_semanal
 WHERE id_proyecto=proyecto AND MONTH(s_inicial)=mes AND MONTH(s_final)=mes);
 set
-suma3:
-=
+suma3:=
 (SELECT ifNULL(SUM(hora),0)
 FROM carga_mensual
 WHERE id_proyecto=proyecto AND MONTH(m_inicial)=mes AND MONTH(m_final)=mes);
@@ -86,11 +83,10 @@ END
 $$
 
 /*Store Procedure Calcular Diferencia*/
-delimiter $
-$
-create procedure CalcularDiferencia (in usuario int, proyecto int, anio int)
+delimiter $$
+create procedure CalcularDiferencia (usuario int, proyecto int, anio int)
 BEGIN
-    DECLARE suma1 DECIMAL;
+DECLARE suma1 DECIMAL;
 DECLARE suma2 DECIMAL;
 DECLARE suma3 DECIMAL;
 DECLARE h_as DECIMAL;
@@ -99,26 +95,22 @@ if usuario <=>5
 THEN
 
 set
-suma1:
-=
+suma1:=
 (SELECT ifNULL(SUM(hora),0)
 FROM carga_diaria
 WHERE id_proyecto=proyecto AND YEAR(dia)=anio);
 set
-suma2:
-=
+suma2:=
 (SELECT ifNULL(SUM(hora),0)
 FROM carga_semanal
 WHERE id_proyecto=proyecto AND YEAR(s_inicial)=anio AND YEAR(s_final)=anio);
 set
-suma3:
-=
+suma3:=
 (SELECT ifNULL(SUM(hora),0)
 FROM carga_mensual
 WHERE id_proyecto=proyecto AND YEAR(m_inicial)=anio AND YEAR(m_final)=anio);
 set
-h_as:
-=
+h_as:=
 (SELECT pack_horas
 FROM proyecto
 WHERE id=proyecto);
