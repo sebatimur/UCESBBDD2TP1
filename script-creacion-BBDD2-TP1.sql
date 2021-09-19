@@ -93,10 +93,3 @@ alter table carga_semanal add constraint foreign key (id_participante) reference
 
 alter table carga_mensual add constraint foreign key (id_proyecto) references proyecto(id);
 alter table carga_mensual add constraint foreign key (id_participante) references participante(id);
-
-
-
-
-
-
-
