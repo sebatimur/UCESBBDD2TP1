@@ -24,7 +24,6 @@ INSERT INTO proyecto (nombre, costo_proyecto, costo_hora, pack_horas) VALUES ('C
 INSERT INTO proyecto (nombre, costo_proyecto, costo_hora, pack_horas) VALUES ('Hotel Las Brisas', 150000, 428.57, 350 );
 
 
-
 /*INSERT HORAS ASIGNADAS*/
 /*proyecto 1*/
 INSERT INTO horas_asignadas(id_proyecto,id_participante, horas_asignadas_proyecto)
@@ -52,17 +51,10 @@ call RendicionHorasDia
 call RendicionHorasDia
 ('2021-09-15', 8.00, 1,1);
 
-
 /*prueba carga semanal*/
-
 call RendicionHorasSemana
 ('2021-09-13','2021-09-17',40.00,1,2);
-
 
 /*prueba carga mensual*/
 call RendicionHorasMes
 ('2021-08-03', '2021-08-31',35.00,1,3);
-
-
-
-
