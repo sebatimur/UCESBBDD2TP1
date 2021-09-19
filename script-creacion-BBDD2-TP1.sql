@@ -21,7 +21,7 @@ id int auto_increment,
 nombre varchar(50) not null,
 costo_proyecto decimal(10,2),
 costo_hora decimal(6,2),
-pack_horas decimal (12,2) not null; /*Modificado*/
+pack_horas decimal (12,2) not null, /*Modificado*/
 constraint primary key(id)
 );
 
