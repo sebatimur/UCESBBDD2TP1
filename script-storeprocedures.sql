@@ -82,6 +82,65 @@ GROUP BY id_proyecto_t, id_cliente_t;
 
 END
 IF;
-/*SELECT  id_proyecto_t,id_cliente_t, sum(horas_d + horas_s + horas_m) as horas_mensuales FROM tabla_horas2 GROUP BY id_proyecto_t, id_cliente_t;*/
+END
+$$
+
+/*Store Procedure Calcular Diferencia*/
+delimiter $
+$
+create procedure CalcularDiferencia (in usuario int, proyecto int, anio int)
+BEGIN
+    DECLARE suma1 DECIMAL;
+DECLARE suma2 DECIMAL;
+DECLARE suma3 DECIMAL;
+DECLARE h_as DECIMAL;
+
+if usuario <=>5
+THEN
+
+set
+suma1:
+=
+(SELECT ifNULL(SUM(hora),0)
+FROM carga_diaria
+WHERE id_proyecto=proyecto AND YEAR(dia)=anio);
+set
+suma2:
+=
+(SELECT ifNULL(SUM(hora),0)
+FROM carga_semanal
+WHERE id_proyecto=proyecto AND YEAR(s_inicial)=anio AND YEAR(s_final)=anio);
+set
+suma3:
+=
+(SELECT ifNULL(SUM(hora),0)
+FROM carga_mensual
+WHERE id_proyecto=proyecto AND YEAR(m_inicial)=anio AND YEAR(m_final)=anio);
+set
+h_as:
+=
+(SELECT pack_horas
+FROM proyecto
+WHERE id=proyecto);
+
+CREATE TABLE tabla_horas3
+(
+    id_proyecto_t int,
+    horas_d decimal default 0,
+    horas_s decimal default 0,
+    horas_m decimal default 0,
+    horas_a decimal default 0
+);
+insert into tabla_horas3
+    (id_proyecto_t, horas_d, horas_s, horas_m,horas_a)
+VALUES
+    (proyecto, suma1, suma2, suma3, h_as);
+SELECT id_proyecto_t, sum(horas_d + horas_s + horas_m) as horas_trabajadas, horas_a as horas_contratadas,
+    (sum(horas_d + horas_s + horas_m)-horas_a) as horas_extra
+FROM tabla_horas3
+GROUP BY id_proyecto_t,horas_a;
+
+END
+IF;
 END
 $$
