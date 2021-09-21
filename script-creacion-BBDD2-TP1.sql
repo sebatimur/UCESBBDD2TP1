@@ -2,27 +2,29 @@ CREATE DATABASE BBDD2;
 
 USE  BBDD2;
 
-CREATE TABLE participante(
+CREATE TABLE participante
+(
 id int auto_increment,
 nombre varchar (50) not null,
 apellido varchar (50) not null,
 id_rol int,
-constraint primary key(id)
+constraint primary key (id)
 );
 
 CREATE TABLE rol(
 id int,
 descripcion varchar(150) not null,
-constraint primary key (id)
+constraint primary key(id)
 );
+
 
 CREATE TABLE proyecto(
 id int auto_increment,
-nombre varchar(50) not null,
-costo_proyecto decimal(10,2),
-costo_hora decimal(6,2),
-pack_horas decimal (12,2) not null, /*Modificado*/
-constraint primary key(id)
+nombre varchar (50) not null,
+costo_proyecto decimal (10,2),
+costo_hora decimal (6,2),
+pack_horas decimal(12,2)
+constraint primary key (id)
 );
 
 CREATE TABLE horas_asignadas(
@@ -30,42 +32,22 @@ id_horas_asignadas int auto_increment,
 id_proyecto int,
 id_participante int,
 horas_asignadas_proyecto decimal not null,
-constraint primary key(id_horas_asignadas)
+constraint primary key (id_horas_asignadas)
 );
 
-CREATE TABLE carga_diaria(
-id_diario int auto_increment,
+CREATE TABLE carga_horas(
+id_carga_horas int auto_increment,
 dia date,
-hora decimal(5,2),
+hora decimal (5,2),
 id_proyecto int,
 id_participante int,
-constraint primary key (id_diario)
-);
-
-CREATE TABLE carga_semanal(
-id_semanal int auto_increment,
-s_inicial date,
-s_final date,
-hora decimal(5,2),
-id_proyecto int,
-id_participante int,
-constraint primary key (id_semanal)
-);
-
-CREATE TABLE carga_mensual(
-id_mensual int auto_increment,
-m_inicial date,
-m_final date,
-hora decimal(5,2),
-id_proyecto int,
-id_participante int,
-constraint primary key(id_mensual)
+constraint primary key (id_carga_horas)
 );
 
 CREATE TABLE cliente(
 id int auto_increment,
 id_proyecto int,
-constraint primary key(id)
+constraint primary key (id)
 );
 
 CREATE TABLE facturacion(
@@ -75,21 +57,32 @@ monto_factura decimal(10,2),
 constraint primary key(id)
 );
 
+/*INSERT ROLES*/
+INSERT INTO rol(id,descripcion) VALUES (1, 'Desarrollador');
+INSERT INTO rol(id,descripcion)VALUES (2, 'Tester');
+INSERT INTO rol(id,descripcion)VALUES (3, 'Administrador');
+INSERT INTO rol(id,descripcion)VALUES(4, 'Devop');
+INSERT INTO rol(id,descripcion)VALUES(5, 'Project Manager');
 
-ALTER TABLE participante ADD foreign key (id_rol) references rol(id);
+/*INSERT PARTICIPANTE*/
+INSERT INTO participante(id, nombre, apellido, id_rol) VALUES(1, 'Leandro', 'Sanchez', 1);
+INSERT INTO participante(id, nombre, apellido, id_rol)VALUES(2, 'Sandra', 'Martinez', 1);
+INSERT INTO participante(id, nombre, apellido, id_rol)VALUES(3, 'José', 'Perez', 2);
+INSERT INTO participante(id, nombre, apellido, id_rol)VALUES(4, 'Jesica', 'Gonzalez', 3);
+INSERT INTO participante(id, nombre, apellido, id_rol)VALUES(5, 'María', 'Cosi', 3);
+INSERT INTO participante(id, nombre, apellido, id_rol)VALUES(6, 'María', 'Matienzo', 4);
+INSERT INTO participante(id, nombre, apellido, id_rol)VALUES(7, 'Sofia', 'Caras', 5);
+                
+/*INSERT PROYECTO*/
+INSERT INTO proyecto(nombre, costo_proyecto, costo_hora, pack_horas)VALUES('La Libreria', 25000, 125, 200 );
+INSERT INTO proyecto(nombre, costo_proyecto, costo_hora, pack_horas)VALUES('Consorcio San Martin 432', 55000, 220, 250 );
+INSERT INTO proyecto(nombre, costo_proyecto, costo_hora, pack_horas)VALUES('Hotel Las Brisas', 150000, 428.57, 350 );
 
-alter table horas_asignadas add constraint foreign key (id_participante) references participante(id);
-alter table horas_asignadas add constraint foreign key (id_proyecto) references proyecto(id);
+                    
+/*INSERT HORAS ASIGNADAS*//*proyecto 1*/
+INSERT INTO horas_asignadas(id_proyecto,id_participante, horas_asignadas_proyecto)VALUES(1, 1, 60.00);
+INSERT INTO horas_asignadas(id_proyecto,id_participante, horas_asignadas_proyecto)VALUES(1, 2, 60.00);
+INSERT INTO horas_asignadas(id_proyecto,id_participante, horas_asignadas_proyecto)VALUES(1, 3, 30.00);
+INSERT INTO horas_asignadas(id_proyecto,id_participante, horas_asignadas_proyecto)VALUES(1, 4, 40.00);
+INSERT INTO horas_asignadas(id_proyecto,id_participante, horas_asignadas_proyecto)VALUES(1, 7, 10.00);
 
-alter table cliente add constraint foreign key (id_proyecto) references proyecto(id);
-alter table facturacion add constraint foreign key (id_cliente) references cliente(id);
-
-alter table carga_diaria add constraint foreign key (id_proyecto) references proyecto(id);
-alter table carga_diaria add constraint foreign key (id_participante) references participante(id);
-
-
-alter table carga_semanal add constraint foreign key (id_proyecto) references proyecto(id);
-alter table carga_semanal add constraint foreign key (id_participante) references participante(id);
-
-alter table carga_mensual add constraint foreign key (id_proyecto) references proyecto(id);
-alter table carga_mensual add constraint foreign key (id_participante) references participante(id);
