@@ -59,15 +59,11 @@ WHILE;
 END
 $$
 
-describe carga_horas;
-DROP PROCEDURE RendicionHoras;
 
-call RendicionHoras
-('20210921',5,8,1,1);
-call RendicionHoras
-('20210901',20,8,1,1);
 
-/*store procedure para calcular liquidacion mensual*/
+
+
+/*store procedure para calcular liquidacion mensual
 delimiter $$
 create procedure CalcularLiquidacionMensual (in usuario int, cliente int, proyecto int, mes int)
 BEGIN
@@ -116,9 +112,43 @@ GROUP BY id_proyecto_t, id_cliente_t;
 END
 IF;
 END
+$$*/
+delimiter $
+$
+create procedure CalcularLiquidacionMensual (in usuario int, cliente int, proyecto int, mes int)
+BEGIN
+    DECLARE suma1 DECIMAL;
+
+if usuario <=>5
+THEN
+
+set
+suma1:
+=
+(SELECT ifNULL(SUM(hora),0)
+FROM carga_horas
+WHERE id_proyecto=proyecto AND MONTH(dia)=mes);
+
+CREATE TABLE tabla_horas2
+(
+    id_cliente_t int,
+    id_proyecto_t int,
+    horas_d decimal default 0
+);
+insert into tabla_horas2
+    (id_cliente_t, id_proyecto_t, horas_d)
+VALUES
+    (cliente, proyecto, suma1);
+SELECT id_proyecto_t, id_cliente_t, horas_d as horas_mensuales
+FROM tabla_horas2
+GROUP BY id_proyecto_t, id_cliente_t, horas_d
+;
+END
+IF;
+END
 $$
 
-/*Store Procedure Calcular Diferencia*/
+/*Store Procedure Calcular Diferencia
 delimiter $
 $
 create procedure CalcularDiferencia (in usuario int, proyecto int, anio int)
@@ -172,6 +202,47 @@ SELECT id_proyecto_t, sum(horas_d + horas_s + horas_m) as horas_trabajadas, hora
     (sum(horas_d + horas_s + horas_m)-horas_a) as horas_extra
 FROM tabla_horas3
 GROUP BY id_proyecto_t,horas_a;
+
+END
+IF;
+END
+$$*/
+
+delimiter $
+$
+create procedure CalcularDiferencia (in usuario int, proyecto int, anio int)
+BEGIN
+    DECLARE suma1 DECIMAL;
+DECLARE h_as DECIMAL;
+if usuario <=>5
+THEN
+set
+suma1:
+=
+(SELECT ifNULL(SUM(hora),0)
+FROM carga_horas
+WHERE id_proyecto=proyecto AND YEAR(dia)=anio);
+set
+h_as:
+=
+(SELECT pack_horas
+FROM proyecto
+WHERE id=proyecto);
+
+CREATE TABLE tabla_horas3
+(
+    id_proyecto_t int,
+    horas_d decimal default 0,
+    horas_a decimal default 0
+);
+INSERT INTO tabla_horas3
+    (id_proyecto_t, horas_d, horas_a)
+VALUES
+    (proyecto, suma1, h_as);
+SELECT id_proyecto_t, horas_d  as horas_trabajadas, horas_a as horas_contratadas,
+    (horas_d-horas_a) as horas_extra
+FROM tabla_horas3
+GROUP BY id_proyecto_t,horas_d,horas_a;
 
 END
 IF;

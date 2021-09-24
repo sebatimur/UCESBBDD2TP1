@@ -44,24 +44,11 @@ VALUES
 (1,7,10.00);
 SELECT * FROM horas_asignadas;
 
-/*prueba carga diaria*/
-call RendicionHorasDia
-('2021-09-13', 8.00, 1,1);
-call RendicionHorasDia
-('2021-09-14', 8.00, 1,1);
-call RendicionHorasDia
-('2021-09-15', 8.00, 1,1);
-
-
-/*prueba carga semanal*/
-
-call RendicionHorasSemana
-('2021-09-13','2021-09-17',40.00,1,2);
-
-
-/*prueba carga mensual*/
-call RendicionHorasMes
-('2021-08-03', '2021-08-31',35.00,1,3);
+/*prueba carga horas*/
+call RendicionHoras
+('20210921',5,8,1,1);
+call RendicionHoras
+('20210901',20,8,1,1);
 
 /*prueba liquidaciòn mensual*/
 call CalcularLiquidacionMensual
@@ -69,8 +56,12 @@ call CalcularLiquidacionMensual
 call CalcularLiquidacionMensual
 (4,1,1,09);
 
-/*prueba calcular diferencia*/
-call CalcularDiferencia(5,1,2021);
+/*prueba diferencia de horas*/
+call CalcularDiferencia
+(5,1,2021);
+
+
+
 
 
 
